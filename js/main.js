@@ -6,10 +6,8 @@ const reloadBtn = document.querySelector(".reloadBtn");
 const closeBtn = document.querySelectorAll(".closeBtn");
 const questions = document.querySelectorAll(".question");
 const options = document.querySelectorAll(".option");
-const resetAllBtn = $("#resetAll").first();
-const viewAllBtn = $("#viewAll").first();
+ const viewAllBtn = $("#viewAll").first();
 viewAllBtn.on("click", viewAll);
-resetAllBtn.on("click", resetAll);
 let currAns = null;
 let isCorrect = false;
 var pageWidth, pageHeight;
@@ -183,16 +181,6 @@ function viewAll() {
 
   correctAudio.play();
   $(".optionContainer").off("click");
-}
-
-function resetAll() {
-  const lineItem = $(".optionContainer");
-  lineItem.each(function () {
-    $(this).removeClass("selected");
-    $(this).text("");
-  });
-  $("#components__container li").removeClass("active");
-  renderPage(true);
 }
 
 function isEmptyOrSpaces(str){
