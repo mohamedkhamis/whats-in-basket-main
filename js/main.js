@@ -16,9 +16,6 @@ var pageWidth, pageHeight;
 const correctAudio = $("<audio id=`correctAudio`>").attr("src", "./assets/audio/correct.mp3").get(0);
 const inCorrectAudio = $("<audio>").attr("src", "./assets/audio/incorrect.mp3").get(0);
 
-$(".myContent, .resourseContainer, .helpContainer").css("height",(960 * 74) / 100 + 15 + "px");
-$(".backGround").css("height", (960 * 74) / 100 + "px");
-$(".header, .footer").css("height", (960 * 13) / 100 + "px");
 
 
 var basePage = {
@@ -28,17 +25,6 @@ var basePage = {
   scaleX: 1,
   scaleY: 1,
 };
-
-const choices = [
-  { title: "scissors", isCorrect: false, selected: false },
-  { title: "eraser", isCorrect: true, selected: false },
-  { title: "ruler", isCorrect: true, selected: true },
-  { title: "bag", isCorrect: false, selected: false },
-  { title: "pencil pen", isCorrect: false, selected: true },
-  { title: "pencil", isCorrect: true, selected: false },
-  { title: "book", isCorrect: true, selected: false },
-  { title: "pen", isCorrect: true, selected: false },
-];
 
 
 $(function () {
@@ -158,32 +144,32 @@ reloadBtn.addEventListener("click", function () {
 
 function viewAll() {
   let count = 0;
-  const lineItem = document.querySelectorAll(".optionContainer .option");
-  choices.forEach((item, index, array) => {
-    if (item.isCorrect) {
+  questions.forEach((item, index, array) => {
+    let dataAns = item.getAttribute("data-answer");
+    if (dataAns == "correct") {
       const markImg = document.createElement("img");
       markImg.id = index;
       markImg.src = "./assets/images/tikMark-small.png";
 
       let isSelectedOption = false;
-      lineItem.forEach(function (currentOptions) {
-        if (item.title == currentOptions.textContent) {
+      options.forEach(function (currentOptions) {
+        if (item.innerHTML == currentOptions.textContent) {
           isSelectedOption = true;
           return;
         }
       });
       if(!isSelectedOption){
-        if(isEmptyOrSpaces(lineItem[count].textContent)){
-          lineItem[count].classList.add("done");
-          lineItem[count].textContent = item.title;
-          lineItem[count].append(markImg);
+        if(isEmptyOrSpaces(options[count].textContent)){
+          options[count].classList.add("done");
+          options[count].textContent = item.innerHTML;
+          options[count].append(markImg);
           count++;
   
         }else{
           count++;  
-          lineItem[count].classList.add("done");
-          lineItem[count].textContent = item.title;
-          lineItem[count].append(markImg);
+          options[count].classList.add("done");
+          options[count].textContent = item.innerHTML;
+          options[count].append(markImg);
         }
       }
     }
