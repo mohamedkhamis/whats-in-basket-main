@@ -6,31 +6,27 @@ const reloadBtn = document.querySelector(".reloadBtn");
 const closeBtn = document.querySelectorAll(".closeBtn");
 const questions = document.querySelectorAll(".question");
 const options = document.querySelectorAll(".option");
- const viewAllBtn = $("#viewAll").first();
-viewAllBtn.on("click", viewAll);
 let currAns = null;
 let isCorrect = false;
 var pageWidth, pageHeight;
-const correctAudio = $("<audio id=`correctAudio`>").attr("src", "./assets/audio/correct.mp3").get(0);
-const inCorrectAudio = $("<audio>").attr("src", "./assets/audio/incorrect.mp3").get(0);
-
-
+const correctAudio = document.querySelector("#correctAudio");
+const inCorrectAudio = document.querySelector("#InCorrectAudio");
 
 var basePage = {
   width: 1280,
   height: 960,
-  scale: 1,
-  scaleX: 1,
-  scaleY: 1,
+  scale: 0,
+  scaleX: 0,
+  scaleY: 0,
 };
-
 
 $(function () {
   var $page = $(".myPage");
+  // var Apage = document.querySelector(".myPage");
 
   getPageSize();
   scalePages($page, pageWidth, pageHeight);
-  
+
   $(window).resize(
     _.debounce(function () {
       getPageSize();
@@ -156,15 +152,14 @@ function viewAll() {
           return;
         }
       });
-      if(!isSelectedOption){
-        if(isEmptyOrSpaces(options[count].textContent)){
+      if (!isSelectedOption) {
+        if (isEmptyOrSpaces(options[count].textContent)) {
           options[count].classList.add("done");
           options[count].textContent = item.innerHTML;
           options[count].append(markImg);
           count++;
-  
-        }else{
-          count++;  
+        } else {
+          count++;
           options[count].classList.add("done");
           options[count].textContent = item.innerHTML;
           options[count].append(markImg);
@@ -180,9 +175,12 @@ function viewAll() {
   });
 
   correctAudio.play();
-  $(".optionContainer").off("click");
+  const optionContainers = document.querySelectorAll(".optionContainer");
+  optionContainers.forEach((optionContainer) => {
+    optionContainer.removeEventListener("click", function () {});
+  });
 }
 
-function isEmptyOrSpaces(str){
-  return str === null || str.trim() === '';
+function isEmptyOrSpaces(str) {
+  return str === null || str.trim() === "";
 }
