@@ -8,9 +8,11 @@ const questions = document.querySelectorAll(".question");
 const options = document.querySelectorAll(".option");
 let currAns = null;
 let isCorrect = false;
+let timeoutId;
 var pageWidth, pageHeight;
 const correctAudio = document.querySelector("#correctAudio");
 const inCorrectAudio = document.querySelector("#InCorrectAudio");
+var pageElement = document.querySelector(".myPage");
 
 var basePage = {
   width: 1280,
@@ -19,50 +21,40 @@ var basePage = {
   scaleX: 0,
   scaleY: 0,
 };
-
-$(function () {
-  var $page = $(".myPage");
-  // var Apage = document.querySelector(".myPage");
-
+window.addEventListener("load", function () {
   getPageSize();
-  scalePages($page, pageWidth, pageHeight);
-
-  $(window).resize(
-    _.debounce(function () {
-      getPageSize();
-      scalePages($page, pageWidth, pageHeight);
-    }, 150)
-  );
-
-  function getPageSize() {
-    pageHeight = $("#container").height();
-    pageWidth = $("#container").width();
-  }
-
-  function scalePages(page, maxWidth, maxHeight) {
-    var scaleX = 1,
-      scaleY = 1;
-    scaleX = maxWidth / basePage.width;
-    scaleY = maxHeight / basePage.height;
-    basePage.scaleX = scaleX;
-    basePage.scaleY = scaleY;
-    basePage.scale = scaleX > scaleY ? scaleY : scaleX;
-    var newLeftPos = Math.abs(
-      Math.floor((basePage.width * basePage.scale - maxWidth) / 2)
-    );
-    var newTopPos = 0;
-    page.attr(
-      "style",
-      "-webkit-transform:scale(" +
-        basePage.scale +
-        ");left:" +
-        newLeftPos +
-        "px;top:" +
-        newTopPos +
-        "px;"
-    );
-  }
+  scalePages(pageElement, pageWidth, pageHeight);
 });
+
+window.addEventListener("resize", function () {
+  let timeoutId;
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(function () {
+    getPageSize();
+    scalePages(pageElement, pageWidth, pageHeight);
+  }, 150);
+});
+
+function getPageSize() {
+  pageHeight = document.querySelector("#container").clientHeight;
+  pageWidth = document.querySelector("#container").clientWidth;
+}
+
+function scalePages(pageElement, maxWidth, maxHeight) {
+  var scaleX = 1,
+    scaleY = 1;
+  scaleX = maxWidth / basePage.width;
+  scaleY = maxHeight / basePage.height;
+  basePage.scaleX = scaleX;
+  basePage.scaleY = scaleY;
+  basePage.scale = scaleX > scaleY ? scaleY : scaleX;
+  var newLeftPos = Math.abs(
+    Math.floor((basePage.width * basePage.scale - maxWidth) / 2)
+  );
+  var newTopPos = 0;
+  let transform = "-webkit-transform:scale(" + basePage.scale +");left:" + newLeftPos +"px;top:" + newTopPos + "px;";
+  pageElement.setAttribute("style",transform);
+}
 
 resourseBtn.addEventListener("click", function () {
   resoursePopup.classList.add("show");
@@ -102,21 +94,16 @@ options.forEach(function (currentOption) {
     }
     if (isCorrect) {
       let currSelectedQues = document.querySelector(".question.selected");
-      currentOption.innerHTML =
-        currAns + "<img src='assets/images/tikMark-small.png'/>";
+      currentOption.innerHTML = currAns + "&nbsp;" + "<img src='assets/images/tikMark-small.png'/>";
       correctAudio.play();
 
       currentOption.classList.add("done");
-      currentOption.classList.add("correctAnsAudio");
-
       currSelectedQues.classList.add("hidden");
       currSelectedQues.classList.remove("selected");
       currAns = null;
       isCorrect = false;
     } else {
-      currentOption.innerHTML =
-        currAns +
-        "<img class='animate' src='assets/images/crossMark-small.png'/>";
+      currentOption.innerHTML = currAns + "&nbsp;" + "<img class='animate' src='assets/images/crossMark-small.png'/>";
       inCorrectAudio.play();
 
       setTimeout(function () {
